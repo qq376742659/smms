@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--首页</title>
+    <!--引入重置样式-->
+    <link rel="stylesheet" href="./stylesheets/reset.css">
+    <!--引入elementUI.css-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入index.css-->
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <!--使用script标签发起同步请求检查是否登录，不能用ajax，否则异步请求会就算没登录在提示的时候也会看到页面-->
+    <script src="/users/checkState"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>系统信息</span>
+            </div>
+            <div class="text item">
+                <el-alert title="商品总数:5。已经销售的总金额:890.00。库存商品总价:1235.82" type="success" show-icon>
+                </el-alert>
+                <el-alert title="导入数据" type="info" show-icon :closable="false">
+                </el-alert>
+
+                <!--左右结构layout-->
+                <el-row :gutter="22">
+                    <!--左右结构的左部-->
+                    <el-col :span="12">
+                        <div class="grid-content bg-purple">
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                    <span>销售排行</span>
+                                </div>
+                                <div class="text item">
+                                    <template>
+                                        <el-table :data="tableData" stripe style="width: 100%">
+                                            <el-table-column prop="date" label="商品名称" width="180">
+                                            </el-table-column>
+                                            <el-table-column prop="address" label="销量">
+                                            </el-table-column>
+                                        </el-table>
+                                    </template>
+                                </div>
+                            </el-card>
+                        </div>
+                    </el-col>
+                    <!--左右结构的右部-->
+                    <el-col :span="12">
+                        <div class="grid-content bg-purple-light">
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                    <span>缺货的商品</span>
+                                </div>
+                                <div class="text item">
+                                    <template>
+                                        <el-table :data="tableData" stripe style="width: 100%">
+                                            <el-table-column prop="date" label="商品名称" width="180">
+                                            </el-table-column>
+                                            <el-table-column prop="name" label="库存" width="180">
+                                            </el-table-column>
+                                            <el-table-column prop="address" label="操作">
+                                            </el-table-column>
+                                        </el-table>
+                                    </template>
+                                </div>
+                            </el-card>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+        </el-card>
+    </el-main>
+</div>
+
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI.js-->
+<script src="./javascripts/elementUI.js"></script>
+
+<script>
+
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                tableData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路'
+                }, {
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路'
+                }, {
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路'
+                }, {
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路'
+                }]
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

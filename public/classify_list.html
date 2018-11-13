@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--分类管理</title>
+    <!--引入重置样式-->
+    <link rel="stylesheet" href="./stylesheets/reset.css">
+    <!--引入elementUI.css-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入index.css-->
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <!--使用script标签发起同步请求检查是否登录，不能用ajax，否则异步请求会就算没登录在提示的时候也会看到页面-->
+    <script src="/users/checkState"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>分类管理</span>
+            </div>
+            <div class="text item">
+
+                <template>
+                    <el-table :data="tableData" style="width: 100%">
+                        <el-table-column label="编号" prop="cg_id">
+                        </el-table-column>
+
+                        <el-table-column label="分类名称" prop="cg_name">
+                        </el-table-column>
+
+                        <el-table-column label="父级分类" prop="cg_fatherName">
+                        </el-table-column>
+
+                        <el-table-column label="管理">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary" plain
+                                        class="el-icon-edit"
+                                        size="mini"
+                                        @click="handleEdit(scope.row.cg_id)">编辑
+                                </el-button>
+                                <el-button
+                                        class="el-icon-delete"
+                                        size="mini"
+                                        type="danger"   plain
+                                        @click="handleDelete(scope.row.cg_id)">删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+
+
+            </div>
+        </el-card>
+    </el-main>
+</div>
+
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI.js-->
+<script src="./javascripts/elementUI.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                tableData: []
+            }
+        },
+        methods: {
+            //抽取获取分类的公共方法
+            getClassifyData () {
+                $.get('/classify/getClassify', (result) => {
+                    //console.log(result)
+                    //将得到数据线先进行处理
+                    result.forEach((v) => {
+                        if (v.cg_fatherName === null) {
+                            v.cg_fatherName = "顶级分类";
+                        }
+                    });
+                    //将获取到的分类列表添加到classifyList中
+                    this.tableData = result;
+                });
+            },
+            //用户管理修改方法
+            handleEdit(id) {
+                //1）点击修改按钮时把id传递给修改页面classify_edit.html
+                location.href = "classify_edit.html?id=" + id;
+            },
+            //用户管理删除方法
+            handleDelete(id) {
+                //console.log(id);
+                //弹出提示是否删除
+                if (confirm("是否确定删除？")) {
+                    //1）点击是时发起ajax把id传递给后台
+                    $.get('/classify/delete', {id}, (result) => {
+                        //根据后台返回的数据处理业务逻辑
+                        //console.log(result);
+                        if (result.isOk) {
+                            //删除成功后重新获取数据(tableData)重新渲染页面
+                            //发起ajax到后台取数据
+                            //调用抽取的公共获取数据的方法
+                            this.getClassifyData();
+                        }
+                    })
+                }
+            }
+        },
+        //页面加载完成后就执行的钩子函数
+        mounted () {
+            //发起ajax到后台取数据
+            //调用抽取的公共获取数据的方法
+            this.getClassifyData();
+        }
+    })
+
+</script>
+</body>
+</html>

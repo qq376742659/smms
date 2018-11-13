@@ -1,0 +1,50 @@
+@charset "utf-8";
+
+body{
+    background:url("../images/login_bg_1.jpg");
+}
+
+/*卡片*/
+.text {
+    font-size: 14px;
+}
+
+.item {
+    margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+.clearfix:after {
+    clear: both
+}
+
+.box-card {
+    width: 480px;
+    height: 300px;
+}
+
+.el-card{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+
+.el-card h1{
+    font-size: 24px;
+}
+
+.el-card h1 span{
+    color: #0d8020;
+    margin-right: 5px;
+}
+
+.el-card__header{
+    padding: 5px 20px;
+}

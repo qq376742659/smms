@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--账户添加</title>
+    <!--引入重置样式-->
+    <link rel="stylesheet" href="./stylesheets/reset.css">
+    <!--引入elementUI.css-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入index.css-->
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <!--使用script标签发起同步请求检查是否登录，不能用ajax，否则异步请求会就算没登录在提示的时候也会看到页面-->
+    <script src="/users/checkState"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>添加管理员账号</span>
+            </div>
+            <div class="text item">
+
+                <el-form :label-position="labelPosition" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="用户名：" prop="username">
+                        <el-input type="text" v-model="ruleForm2.username"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码：" prop="pass">
+                        <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码：" prop="checkPass">
+                        <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="选择用户组：" prop="region">
+                        <el-select v-model="ruleForm2.region" placeholder="选择用户组">
+                            <el-option label="超级管理员" value="超级管理员"></el-option>
+                            <el-option label="管理员" value="管理员"></el-option>
+                            <el-option label="普通会员" value="普通会员"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="success" @click="submitForm('ruleForm2')">添加</el-button>
+                    </el-form-item>
+                </el-form>
+
+            </div>
+        </el-card>
+    </el-main>
+</div>
+
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI.js-->
+<script src="./javascripts/elementUI.js"></script>
+
+<script>
+
+    new Vue({
+        el: "#app",
+        data() {
+            var validatePass2 = (rule, value, callback) => {
+                if (value !== this.ruleForm2.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                labelPosition: 'top',
+                ruleForm2: {
+                    pass: '',
+                    checkPass: '',
+                    username: '',
+                    region: ''
+                },
+                rules2: {
+                    pass: [
+                        { required : true , message : "请输入密码" , trigger: 'blur' },
+                        { min : 6 , max : 16 , message : "密码在6～16为之间" , trigger: 'blur' }
+                    ],
+                    checkPass: [
+                        { required : true , message : "请再次输入密码" , trigger: 'blur' },
+                        { min : 6 , max : 16 , message : "密码在6～16为之间" , trigger: 'blur' },
+                        { validator: validatePass2, trigger: 'blur' }
+                    ],
+                    username: [
+                        { required : true , message : "请输入用户名" , trigger: 'blur' },
+                        { min : 4 , max : 18 , message : "用户名在4～18为之间" , trigger: 'blur' }
+                    ],
+                    region: [
+                        { required : true , message : "请选择用户组别" , trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        methods: {
+            //表单提交方法
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        //验证通过时
+                        //获取表单的数据
+                        //console.log("表单的数据:",this.ruleForm2);
+                        //发送ajax到后台
+                        $.post("/users/add",this.ruleForm2,(result) => {
+                            //console.log(result);
+                            if (result.isOk) {
+                                if (confirm("添加成功,是否继续添加")) {       //重新跳转到添加页面
+                                    location.href = "member_add.html";
+                                } else {
+                                    location.href = "member_list.html";     //跳转到列表页面
+                                }
+
+                            }
+                        })
+                    } else {
+                        //console.log('error submit!!');
+                        return false;
+                    }
+                });
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

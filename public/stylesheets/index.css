@@ -1,0 +1,214 @@
+@charset "utf-8";
+
+html,body,#app,.el-container{
+    height: 100%;
+}
+
+.el-header, .el-footer {
+    color: #333;
+}
+
+.el-header h2{
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    line-height: 40px;
+}
+
+.el-footer p{
+    line-height: 50px;
+    font-size: 12px;
+    border-top: solid 1px #ccc;
+}
+/*左侧菜单边栏*/
+.el-aside {
+    background: url("../images/left_bg.png") repeat-y;
+    color: #333;
+}
+
+/*左侧所有a标签样式*/
+.el-aside a{
+    color: white;
+    text-decoration: none;
+}
+
+/*左侧标题*/
+.leftTitleWelcome{
+    color: white;
+    text-align: right;
+    padding-right: 20px;
+    line-height: 30px;
+    padding-bottom: 20px;
+}
+
+.leftTitleWelcome h1{
+    font-size: 24px;
+    padding: 40px 0;
+}
+
+.leftTitleWelcome p{
+    font-size: 12px;
+}
+
+/*左侧菜单*/
+.el-menu{
+    background-color: transparent;
+    border-right: none;
+}
+
+/*主菜单样式*/
+.el-submenu__title{
+    color: white;
+    background: url("../images/menu_bg.png") repeat-x;
+    height: 33px;
+    line-height: 33px;
+    text-align: right;
+    width: 210px;
+    margin-left: 20px;
+    border-radius: 5px 0 0 5px;
+}
+
+/*主菜单悬停hvoer样式*/
+.el-submenu__title:hover{
+    background-color: transparent;
+}
+
+.el-submenu{
+    margin-bottom: 10px;
+}
+
+/*隐藏主菜单的箭头*/
+.el-submenu__icon-arrow{
+    display: none;
+}
+
+/*子菜单样式*/
+.el-submenu .el-menu-item{
+    color: white;
+    font-size: 12px;
+    text-align: right;
+    padding: 0 20px;
+    height: 33px;
+    line-height: 33px;
+    width: 210px;
+    margin-left: 20px;
+    border-radius: 5px 0 0 5px;
+}
+
+/*子菜单激活样式*/
+.el-menu-item.is-active{
+    background-color: rgba(255,255,255,.2);
+}
+
+.el-menu-item.is-active a{
+    color: #ffde07;
+}
+
+/*子菜单hover悬停样式*/
+.el-menu-item:hover{
+    background-color: rgba(255,255,255,.2);
+}
+
+
+
+
+/*右侧中间主体*/
+.el-main {
+    color: #333;
+}
+
+body > .el-container {
+    margin-bottom: 40px;
+}
+
+/*右侧中间主体卡片*/
+.text {
+    font-size: 14px;
+}
+
+.item {
+    margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+.clearfix:after {
+    clear: both
+}
+
+.el-card__header{
+    height: 31px;
+    line-height: 31px;
+    padding: 0 20px;
+    background: url("../images/cardTitleBg.png") repeat-x;
+}
+
+.el-card__header span{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.el-alert--info{
+    margin-top: 20px;
+}
+
+
+/*下面的左右结构*/
+.el-row {
+    margin-bottom: 20px;
+    margin-top : 20px;
+}
+.el-col {
+    border-radius: 4px;
+}
+.bg-purple-dark {
+    background: #99a9bf;
+}
+
+.bg-purple-light {
+    background: #e5e9f2;
+}
+.grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+}
+.row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+}
+
+
+/*添加账户*/
+/*用户名等输入框长度*/
+.el-form-item{
+    width: 50%;
+}
+
+.el-input{
+    width: 75%;
+}
+
+.el-input--suffix{
+    width: 100%;
+}
+
+/*分页的位置*/
+.block{
+    margin-top: 30px;
+}
+
+/*搜索框*/
+#searchFrom .el-form-item{
+    width: 25%;
+}
+
+.keyWords{
+    width: 22%  !important;;
+}
+
+.keyWords .el-input{
+    width: 100%;
+}

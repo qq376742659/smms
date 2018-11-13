@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--添加分类</title>
+    <!--引入重置样式-->
+    <link rel="stylesheet" href="./stylesheets/reset.css">
+    <!--引入elementUI.css-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入index.css-->
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <!--使用script标签发起同步请求检查是否登录，不能用ajax，否则异步请求会就算没登录在提示的时候也会看到页面-->
+    <script src="/users/checkState"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>分类修改</span>
+            </div>
+            <div class="text item">
+
+                <el-form :label-position="labelPosition" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="所属分类：" prop="cg_fatherID">
+                        <el-input v-model="ruleForm2.cg_fatherID"></el-input>
+                    </el-form-item>
+                    <el-form-item label="分类名称：" prop="cg_name">
+                        <el-input v-model="ruleForm2.cg_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="状态" prop="cg_isLocked">
+                        <el-radio-group v-model="ruleForm2.cg_isLocked">
+                            <el-radio value="1" label="1">启用</el-radio>
+                            <el-radio value="0" label="0">禁用</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="success" @click="submitForm('ruleForm2')">修改</el-button>
+                    </el-form-item>
+                </el-form>
+
+            </div>
+        </el-card>
+    </el-main>
+</div>
+
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI.js-->
+<script src="./javascripts/elementUI.js"></script>
+
+<script>
+
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                labelPosition: 'top',
+                classifyList : [],
+                ruleForm2: {
+                    cg_fatherID: '',
+                    cg_name: '',
+                    cg_isLocked: "1",
+                    cg_id : 0,       //需要修改的分类的id
+                },
+                rules2: {
+                    cg_fatherID: [
+                        { required : true , message : "请选择分类" , trigger: 'blur' }
+                    ],
+                    cg_name: [
+                        { required : true , message : "分类名称必须填写" , trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        //表单验证成功后发送ajax
+                        $.post("/classify/save",this.ruleForm2,(result) => {
+                            //console.log(result);
+                            if (result.isOk) {
+                                alert(result.msg);     //弹出添加成功的提示
+                                location.href = "classify_list.html";     //跳转到列表页面
+                            } else {
+                                alert(result.msg);
+                                return false;
+                            }
+                        })
+
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        },
+        //页面加载完成后就执行的钩子函数
+        mounted () {
+            //获取修改页面的id
+            let reqUrl = location.href;
+            //console.log(reqUrl);
+            let id = reqUrl.split("=")[1];
+            //console.log(id);
+
+            //发起ajax去获取该id分类的旧的数据
+            $.get('/classify/getClassifyById', {id}, (result) => {
+                //console.log(result);
+                //根据后台返回的数据，将数据回填表单
+
+                //得到的是一个对象数0组，需要取第一个才是需要的数据
+                let data = result[0];
+                //由于使用的是vue的双向数据绑定，修改模型中的数据属性，视图会发生改变
+                this.ruleForm2.cg_fatherID = data.cg_fatherID;
+                this.ruleForm2.cg_name = data.cg_name;
+                this.ruleForm2.cg_isLocked = data.cg_isLocked;
+                this.ruleForm2.cg_id=data.cg_id; //把要修改的id也加到模型中
+            })
+        }
+    })
+
+</script>
+</body>
+</html>

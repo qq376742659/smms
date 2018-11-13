@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--登录页面</title>
+    <!--引入elementUI,-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入本页面css-->
+    <link rel="stylesheet" href="./stylesheets/login.css">
+</head>
+<body>
+
+<div id="app">
+    <!--卡片-->
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <h1><span class="el-icon-menu"></span>欢迎登录</h1>
+        </div>
+        <div class="text item">
+            <!--登录框-->
+            <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px"
+                     class="demo-ruleForm">
+                <el-form-item label="用户账号" prop="username">
+                    <el-input type="username" v-model="ruleForm2.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="登录密码" prop="checkPass">
+                    <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm2')">登录</el-button>
+                    <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                </el-form-item>
+            </el-form>
+
+        </div>
+    </el-card>
+</div>
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI-->
+<script src="./javascripts/elementUI.js"></script>
+
+
+<script>
+
+    new Vue({
+        el: "#app",     //挂载dom
+        data() {
+            return {
+                //将数据作为一个数据对象，有2个属性，username用户名   checkPass密码
+                ruleForm2: {
+                    username: '',
+                    checkPass: ''
+                },
+                //验证规则
+                rules2: {
+                    username: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                        { min: 4, max: 18, message: '长度在 4 到 18 个字符', trigger: 'blur' }
+                    ],
+                    checkPass: [
+                        {required : true ,message : "请输入密码" , trigger: 'blur'},
+                        { min: 4, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        //方法属性
+        methods: {
+            //提交表单的方法
+            submitForm(formName) {
+                //找到表单对象调用validate()验证方法
+                //validate()验证方法回调函数的valid参数表示验证的结果
+                //$("#loginForm")
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        //一般前端验证通过就会发起ajax请求到后端路由做数据库验证
+                        //console.log("取值：用户名和密码",this.ruleForm2.username,this.ruleForm2.checkPass);
+                        $.post("/users/login", this.ruleForm2, (result) => {
+                            //console.log(result.u_id);
+                            //根据后台返回的结果处理业务逻辑
+                            if (result.isOk) {
+                                alert(result.msg);     //验证成功弹出登录成功
+                                location.href = "http://localhost:2333";
+                            } else {
+                                alert(result.msg);
+                            }
+                        })
+                    } else {
+                        console.log('error submit!!');  //验证失败
+                        return false;                   //失败阻止表单提交
+                    }
+                });
+            },
+            //重置表单的方法
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        }
+    })
+
+</script>
+
+</body>
+</html>

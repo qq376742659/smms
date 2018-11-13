@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--用户列表</title>
+    <!--引入重置样式-->
+    <link rel="stylesheet" href="./stylesheets/reset.css">
+    <!--引入elementUI.css-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入index.css-->
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <!--使用script标签发起同步请求检查是否登录，不能用ajax，否则异步请求会就算没登录在提示的时候也会看到页面-->
+    <script src="/users/checkState"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>账号管理</span>
+            </div>
+            <div class="text item">
+
+                <template>
+                    <el-table :data="tableData" style="width: 100%">
+                        <el-table-column label="用户id" prop="u_id">
+                        </el-table-column>
+
+                        <el-table-column label="用户名称" prop="userName" >
+                        </el-table-column>
+
+                        <el-table-column label="用户组">
+                            <template slot-scope="scope">
+                                <div slot="reference" class="name-wrapper">
+                                    <el-tag size="medium">{{ scope.row.userGroup }}</el-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column label="创建时间" prop="createDatetime" :formatter="dateFormat">
+                        </el-table-column>
+
+                        <el-table-column label="管理">
+                            <template slot-scope="scope">
+                                <el-button
+                                        type="primary" plain
+                                        class="el-icon-edit"
+                                        size="mini"
+                                        @click="handleEdit(scope.row.u_id)">修改
+                                </el-button>
+                                <el-button
+                                        class="el-icon-delete"
+                                        size="mini"
+                                        type="danger"   plain
+                                        @click="handleDelete(scope.row.u_id)">删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+
+
+            </div>
+        </el-card>
+    </el-main>
+</div>
+
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入monent.js-->
+<script src="./javascripts/moment-with-locales.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI.js-->
+<script src="./javascripts/elementUI.js"></script>
+
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                tableData: [{
+                    userName: '',
+                    userGroup: '',
+                }]
+            }
+        },
+        methods: {
+            //抽取一个公共的发起ajax获取数据的方法
+            gettableData () {
+                $.get("/users/list",(result) => {
+                    this.tableData = result;
+                });
+            },
+            //用户管理修改方法
+            handleEdit(id) {
+                //console.log(id);
+                //1）点击修改按钮时把id传递给修改页面member_edit.html
+                location.href = "member_edit.html?id=" + id;
+            },
+            //用户管理删除方法
+            handleDelete(id) {
+                //console.log(id);
+                //弹出提示是否删除
+                if (confirm("是否确定删除？")) {
+                    //1）点击是时发起ajax把id传递给后台
+                    $.get('/users/delete', {id}, (result) => {
+                        //根据后台返回的数据处理业务逻辑
+                        //console.log(result);
+                        if (result.isOk) {
+                            //alert(result.msg);
+                            //删除后重新加载页面
+                            //location.href="member_list.html";
+                            //location.reload(); //重载
+
+                            //删除成功后重新获取数据(tableData)重新渲染页面
+                            //发起ajax到后台取数据
+                            //调用抽取的公共获取数据的方法
+                            this.gettableData();
+                        }
+                    })
+                }
+
+            },
+            //时间格式化
+            dateFormat:function(row, column) {
+                let date = row[column.property];
+                if (date === undefined) {
+                    return "";
+                }
+                return moment(date).format("YYYY-MM-DD");
+            }
+        },
+        mounted () {
+            //发起ajax到后台取数据
+            // $.get("/users/list",(result) => {
+            //     this.tableData = result;
+            // });
+            //调用抽取的公共获取数据的方法
+            this.gettableData();
+        }
+    })
+
+</script>
+</body>
+</html>

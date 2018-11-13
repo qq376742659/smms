@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>超市管理系统--修改密码</title>
+    <!--引入重置样式-->
+    <link rel="stylesheet" href="./stylesheets/reset.css">
+    <!--引入elementUI.css-->
+    <link rel="stylesheet" href="./stylesheets/elementUI.css">
+    <!--引入index.css-->
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <!--使用script标签发起同步请求检查是否登录，不能用ajax，否则异步请求会就算没登录在提示的时候也会看到页面-->
+    <script src="/users/checkState"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-main>
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span>修改账号密码</span>
+            </div>
+            <div class="text item">
+
+                <el-form :label-position="labelPosition" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="原密码：" prop="quondamPwd">
+                        <el-input type="password" v-model="ruleForm2.quondamPwd"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新密码：" prop="newPwd">
+                        <el-input type="password" v-model="ruleForm2.newPwd" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="再次输入密码：" prop="newCheckPwd">
+                        <el-input type="password" v-model="ruleForm2.newCheckPwd" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="success" @click="submitForm('ruleForm2')">修改</el-button>
+                    </el-form-item>
+                </el-form>
+
+            </div>
+        </el-card>
+    </el-main>
+</div>
+
+
+<!--引入jquery-->
+<script src="./javascripts/jquery.min.js"></script>
+<!--引入vue-->
+<script src="./javascripts/vue.min.js"></script>
+<!--引入elementUI.js-->
+<script src="./javascripts/elementUI.js"></script>
+
+<script>
+
+    new Vue({
+        el: "#app",
+        data() {
+            var validatePass2 = (rule, value, callback) => {
+                if (value !== this.ruleForm2.newPwd) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                labelPosition: 'top',
+                ruleForm2: {
+                    newPwd: '',
+                    newCheckPwd: '',
+                    quondamPwd: ''
+                },
+                rules2: {
+                    newPwd: [
+                        { required : true , message : "请输入新的密码" , trigger: 'blur' },
+                        { min : 6 , max : 16 , message : "密码在6～16为之间" , trigger: 'blur' }
+                    ],
+                    newCheckPwd: [
+                        { required : true , message : "请再次输入新的密码" , trigger: 'blur' },
+                        { min : 6 , max : 16 , message : "密码在6～16为之间" , trigger: 'blur' },
+                        { validator: validatePass2, trigger: 'blur' }
+                    ],
+                    quondamPwd: [
+                        { required : true , message : "请输入原来的密码" , trigger: 'blur' },
+                        { min : 6 , max : 16 , message : "密码在6～16为之间" , trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        methods: {
+            //表单提交方法
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        /*//验证通过时
+                        //获取表单的数据
+                        console.log("表单的数据:",this.ruleForm2);
+                        //发送ajax到后台
+                        $.post("/users/add",this.ruleForm2,(result) => {
+                            //console.log(result);
+                            if (result.affectedRows > 0) {
+                            //affectedRows是sql语句执行后受到影响的行数，大于0说明有加入到数据库，表明成功
+                                alert('添加成功!');     //弹出添加成功的提示
+                                location.href = "member_list.html";     //跳转到列表页面
+                            }
+                        })*/
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
